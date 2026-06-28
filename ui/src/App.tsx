@@ -7,10 +7,10 @@ import PlotlyChart from "./PlotlyChart"; // 导入上面的图表组件
 import { Data, Layout } from "plotly.js";
 import { Radio } from "antd";
 import type { RadioChangeEvent } from "antd";
-import type { FormProps } from 'antd';
-import { Form,Space} from 'antd';
+import type { FormProps } from "antd";
+import { Form, Space } from "antd";
 import { InputNumber } from "antd";
-
+import FrequencyRangeCom from "./component/FrequencyRangeCom";
 
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
@@ -59,7 +59,7 @@ function App() {
           // 将路径添加到数组中（去重或直接追加，根据需求）
           setUploadedFilePaths((prev) => [...prev, serverFilePath]);
           message.success(
-            `${file.name} 上传成功，路径已保存: ${serverFilePath}`
+            `${file.name} 上传成功，路径已保存: ${serverFilePath}`,
           );
         } else {
           message.warning(`文件 ${file.name} 上传成功，但未返回文件路径`);
@@ -101,7 +101,7 @@ function App() {
         // const obj = JSON.parse(parsedData);
 
         const parsed = (result.plotly_jsons as string[]).map((str) =>
-          JSON.parse(str)
+          JSON.parse(str),
         );
         setPlotlyObjs(parsed);
 
@@ -134,85 +134,112 @@ function App() {
     setPosFlow(e.target.value);
   };
 
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    console.log("Success:", values);
+  };
 
-const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-  console.log('Success:', values);
-};
-
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo);
-};
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo,
+  ) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
     <>
-    <Flex gap="large" wrap vertical>
-    <Form
-    name="basic"
-    labelCol={{ span: 12 }}
-    wrapperCol={{ span: 12 }}
-    style={{ maxWidth: 1200 }}
-    initialValues={{ remember: true }}
-    onFinish={onFinish}
-    onFinishFailed={onFinishFailed}
-    autoComplete="off"
-  >
-    <Form.Item<FieldType> name="remember" valuePropName="checked" label={"数据文件"}>
-      <Upload {...props}>
-          <Button icon={<UploadOutlined />}>上传</Button>
-    </Upload>
-    </Form.Item>
-    <Form.Item<FieldType>
-      label="Ts1"
-      name="Ts1"
-    >
-    <InputNumber min={1} max={10} step="0.00000000000001" defaultValue={1} style={{ width: '100%' }}/>
-    </Form.Item>
+      <Flex gap="large" wrap>
+        <Flex gap="large" wrap vertical>
+          <Form
+            name="basic"
+            labelCol={{ span: 12 }}
+            wrapperCol={{ span: 12 }}
+            style={{ maxWidth: 1200 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item<FieldType>
+              name="remember"
+              valuePropName="checked"
+              label={"数据文件"}
+            >
+              <Upload {...props}>
+                <Button icon={<UploadOutlined />}>上传</Button>
+              </Upload>
+            </Form.Item>
+            <Form.Item<FieldType> label="Ts1" name="Ts1">
+              <InputNumber
+                min={1}
+                max={10}
+                step="0.00000000000001"
+                defaultValue={1}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
 
-    <Form.Item<FieldType>
-      label="Ts2"
-      name="Ts2"
-    >
-    <InputNumber min={1} max={10} step="0.00000000000001" defaultValue={1} style={{ width: '100%' }}/>
-    </Form.Item>
-    <Form.Item<FieldType> name="remember" valuePropName="checked" label={"电力类型"}
-    rules={[{ required: true, message: 'Please input your username!' }]}
-    >
-        <Radio.Group
-          value={posFlow}
-          onChange={onRadioChange}
-          options={[
-            { value: 1, label: "pos" },
-            { value: 0, label: "neg" },
-          ]}
-        />
-    </Form.Item>
-    
-    <Form.Item<FieldType>
-      label="DisturbTime"
-      name="DisturbTime"
-    >
-    <InputNumber min={1} max={10} defaultValue={1} style={{ width: '100%' }}/>
-    </Form.Item>
-    
-    <Form.Item<FieldType>
-      label="BaseFrequencyOffset"
-      name="BaseFrequencyOffset"
-    >
-    <InputNumber min={1} max={10} defaultValue={1} style={{ width: '100%' }}/>
-    </Form.Item>
+            <Form.Item<FieldType> label="Ts2" name="Ts2">
+              <InputNumber
+                min={1}
+                max={10}
+                step="0.00000000000001"
+                defaultValue={1}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+            <Form.Item<FieldType>
+              name="remember"
+              valuePropName="checked"
+              label={"电力类型"}
+              rules={[
+                { required: true, message: "Please input your username!" },
+              ]}
+            >
+              <Radio.Group
+                value={posFlow}
+                onChange={onRadioChange}
+                options={[
+                  { value: 1, label: "pos" },
+                  { value: 0, label: "neg" },
+                ]}
+              />
+            </Form.Item>
 
-    <Form.Item {...tailLayout}>
-        <Space>
-          <Button type="primary" onClick={handleSendPathsToBackend}>
-          生成
-        </Button>
-        <Button type="primary" onClick={resetAllPlots}>
-          重置
-        </Button>
-        </Space>
-      </Form.Item>
-  </Form>
-</Flex>
+            <Form.Item<FieldType> label="DisturbTime" name="DisturbTime">
+              <InputNumber
+                min={1}
+                max={10}
+                defaultValue={1}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="BaseFrequencyOffset"
+              name="BaseFrequencyOffset"
+            >
+              <InputNumber
+                min={1}
+                max={10}
+                defaultValue={1}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+
+            <Form.Item {...tailLayout}>
+              <Space>
+                <Button type="primary" onClick={handleSendPathsToBackend}>
+                  生成
+                </Button>
+                <Button type="primary" onClick={resetAllPlots}>
+                  重置
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
+        </Flex>
+        {/* 频率范围组件 */}
+        <FrequencyRangeCom />
+      </Flex>
       {/* <PlotlyChart data={plotlyData} /> */}
       {/* 如果你用的是自己封装的 PlotlyChart，就这样： */}
       {/* {plotlyObjs.map((plotlyObj, idx) => (
