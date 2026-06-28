@@ -26,6 +26,10 @@ type FieldType = {
   username?: string;
   password?: string;
   remember?: string;
+  BaseFrequencyOffset?: number;
+  DisturbTime?: number;
+  Ts1?: number;
+  Ts2?: number;
 };
 function App() {
   const [posFlow, setPosFlow] = useState<number>(1); // 新增状态管理
@@ -144,9 +148,9 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
     <Flex gap="large" wrap vertical>
     <Form
     name="basic"
-    labelCol={{ span: 8 }}
-    wrapperCol={{ span: 16 }}
-    style={{ maxWidth: 800 }}
+    labelCol={{ span: 12 }}
+    wrapperCol={{ span: 12 }}
+    style={{ maxWidth: 1200 }}
     initialValues={{ remember: true }}
     onFinish={onFinish}
     onFinishFailed={onFinishFailed}
@@ -156,6 +160,19 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
       <Upload {...props}>
           <Button icon={<UploadOutlined />}>上传</Button>
     </Upload>
+    </Form.Item>
+    <Form.Item<FieldType>
+      label="Ts1"
+      name="Ts1"
+    >
+    <InputNumber min={1} max={10} step="0.00000000000001" defaultValue={1} style={{ width: '100%' }}/>
+    </Form.Item>
+
+    <Form.Item<FieldType>
+      label="Ts2"
+      name="Ts2"
+    >
+    <InputNumber min={1} max={10} step="0.00000000000001" defaultValue={1} style={{ width: '100%' }}/>
     </Form.Item>
     <Form.Item<FieldType> name="remember" valuePropName="checked" label={"电力类型"}
     rules={[{ required: true, message: 'Please input your username!' }]}
@@ -172,17 +189,18 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
     
     <Form.Item<FieldType>
       label="DisturbTime"
-      name="username"
+      name="DisturbTime"
     >
-    <InputNumber min={1} max={10} defaultValue={1}/>
+    <InputNumber min={1} max={10} defaultValue={1} style={{ width: '100%' }}/>
+    </Form.Item>
+    
+    <Form.Item<FieldType>
+      label="BaseFrequencyOffset"
+      name="BaseFrequencyOffset"
+    >
+    <InputNumber min={1} max={10} defaultValue={1} style={{ width: '100%' }}/>
     </Form.Item>
 
-    <Form.Item<FieldType>
-      label="Ts"
-      name="username"
-    >
-    <InputNumber min={1} max={10} step="0.00000000000001" defaultValue={1}/>
-    </Form.Item>
     <Form.Item {...tailLayout}>
         <Space>
           <Button type="primary" onClick={handleSendPathsToBackend}>
