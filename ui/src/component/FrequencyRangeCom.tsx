@@ -233,7 +233,6 @@ const FrequencyRangeCom: React.FC = () => {
         bordered
         dataSource={dataSource}
         columns={columns as ColumnTypes}
-        title={() => "频率范围设置"}
       />
     </div>
   );
