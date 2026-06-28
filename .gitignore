@@ -1,0 +1,9 @@
+*.pyc
+*.pyz
+*.spec
+*.toc
+*.exe
+*.mat
+
+build/*
+dist/*
